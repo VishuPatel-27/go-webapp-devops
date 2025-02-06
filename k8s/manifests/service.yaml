@@ -1,0 +1,17 @@
+# service.yaml file is used to create a service in kubernetes cluster
+apiVersion: v1
+# kind is used to define the type of kubernetes object
+kind: Service
+metadata: # metadata of the service
+  name: go-webapp-service # name of the service
+  labels:
+    # labels of the service
+    app: go-webapp-service
+spec: # spec is used to define the specification of the service
+  selector: # selector is used to select the pods
+    app: go-webapp-pod
+  ports:
+  - port: 80 # port of the service
+    targetPort: 8080 # target port of the service
+  # type is used to define the type of the service
+  type: ClusterIP
