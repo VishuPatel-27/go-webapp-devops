@@ -1,0 +1,37 @@
+# deployment.yaml file is used to create a deployment in kubernetes cluster
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  # metadata of deployment
+  name: go-webapp-deployment
+  labels:
+    # this label is used to select the deployment
+    app: go-webapp-deployment
+# spec is used to define the specification of the deployment
+spec:
+  # replicas is used to define the number of pods
+  replicas: 1
+  selector: # selector is used to select the pods
+    matchLabels:
+      app: go-webapp-pod
+  template: # template is used to define the pod template
+    metadata:
+      labels:
+        app: go-webapp-pod # label of the pod
+    spec:
+      # containers is used to define the containers in the pod
+      containers:
+      - name: go-webapp-container # name of the container
+        # this image tag will be replaced by the helm values
+        image: imv27/go-webapp:{{ .Values.image.tag }} # image of the container
+        ports:
+        # containerPort is used to define the port of the container
+        - containerPort: 8080
+        # resources:
+        # # resources is used to define the resource limits and requests
+        #   requests: # minimum resources required by the container
+        #     memory: "64Mi"
+        #     cpu: "250m"
+        #   limits: # maximum resources required by the container
+        #     memory: "128Mi"
+        #     cpu: "500m"

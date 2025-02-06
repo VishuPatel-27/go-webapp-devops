@@ -1,0 +1,21 @@
+# Ingress resource to expose the go-webapp service to the outside world
+apiVersion: networking.k8s.io/v1
+kind: Ingress # kind is used to define the type of kubernetes object
+metadata:
+  # metadata of the ingress
+  # name of the ingress
+  name: go-webapp-ingress
+spec: # spec is used to define the specification of the ingress
+  # ingressClassName is used to define the ingress class
+  ingressClassName: nginx # this ingress class is basically used to define the ingress controller
+  rules: 
+  - host: "go-webapp.local" # host is used to define the host name
+    http: # interal protocol
+      paths: 
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service: # service is used to define the service
+            name: go-webapp-service # name of the service which is exposed
+            port:
+              number: 80 # port of the service
