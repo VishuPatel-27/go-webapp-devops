@@ -29,7 +29,7 @@ jobs:
       
       # checkout the repository
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         
       # setup go
       - name: Setup Go
@@ -59,13 +59,13 @@ jobs:
 
       # checkout the repository
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       # static code analysis
       - name: static code analysis
-        uses: golangci/golangci-lint-action@v6
+        uses: golangci/golangci-lint-action@v6  
         with:
-          version: v1.56.2
+          version: latest
   
   # build and push the docker image
   docker:
@@ -81,7 +81,7 @@ jobs:
   
         # checkout the repository
         - name: Checkout repository
-          uses: actions/checkout@v2
+          uses: actions/checkout@v4
         
         # we are using public docker registry
         # that is why we don't need to login to the docker registry
@@ -113,7 +113,7 @@ jobs:
 
       # checkout the repository
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           token: ${{ secrets.G0_WEBAPP_TOKEN }}
 
