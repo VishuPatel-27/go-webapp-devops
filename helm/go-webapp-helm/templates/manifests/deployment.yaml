@@ -10,7 +10,7 @@ metadata:
 # spec is used to define the specification of the deployment
 spec:
   # replicas is used to define the number of pods
-  replicas: 1
+  replicas: {{ .Values.replicaCount }}
   selector: # selector is used to select the pods
     matchLabels:
       app: go-webapp-pod
