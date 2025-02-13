@@ -88,13 +88,13 @@ jobs:
   
         # build the docker image
         - name: Build Docker image
-          run: docker build -t go-webapp:v1.0 .
+          run: docker build -t go-webapp:${{ github.run_id }} .
           
         # tag the docker image
         - name: Tag Docker image
           # tag the image with the github sha
           # e.g. <docker-hub-username>/go-webapp:<github.run_id>
-          run: docker tag go-webapp:v1.0 ${{ secrets.DOCKER_USERNAME }}/go-webapp:${{ github.run_id }}
+          run: docker tag go-webapp:${{ github.run_id }} ${{ secrets.DOCKER_USERNAME }}/go-webapp:${{ github.run_id }}
           
         # push the docker image
         - name: Push Docker image
