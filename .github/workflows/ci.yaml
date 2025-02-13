@@ -1,0 +1,136 @@
+# CI using the gihub actions
+
+# name of the workflow
+name: CI - GitHub Actions
+
+# when the workflow should be triggered
+on:
+  push:
+    branches:
+      - main
+  
+    # paths to ignore
+    paths-ignore:
+      - README.md
+      - helm/**
+
+# jobs that will be executed
+
+jobs:
+  
+  # job name
+  build:
+    
+    # runs on ubuntu-latest
+    runs-on: ubuntu-latest
+    
+    # steps to be executed
+    steps:
+      
+      # checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        
+      # setup go
+      - name: Setup Go
+        uses: actions/setup-go@v2
+        with: # arguments for the action
+          go-version: 1.22
+                  
+      # build the application
+      - name: Build
+        run: go build -o go-webapp .
+        
+      # run the tests
+      - name: Unit tests
+        # run the tests in all possible directories
+        # ./... means all possible directories
+        run: go test ./...    
+      
+
+  # static code analysis
+  code-quality:
+    
+    # defined the runner for the job
+    runs-on: ubuntu-latest
+
+    # steps to be executed
+    steps:
+
+      # checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      # static code analysis
+      - name: static code analysis
+        uses: golangci/golangci-lint-action@v6
+        with:
+          version: latest
+          args: run --enable-all
+  
+  # build and push the docker image
+  docker:
+      
+      # defined the runner for the job
+      runs-on: ubuntu-latest
+
+      # need build job to complete before this job starts
+      needs: build
+
+      # steps to be executed
+      steps:
+  
+        # checkout the repository
+        - name: Checkout repository
+          uses: actions/checkout@v2
+        
+        # we are using public docker registry
+        # that is why we don't need to login to the docker registry
+  
+        # build the docker image
+        - name: Build Docker image
+          run: docker build -t go-webapp:v1.0 .
+          
+        # tag the docker image
+        - name: Tag Docker image
+          # tag the image with the github sha
+          # e.g. <docker-hub-username>/go-webapp:<github.run_id>
+          run: docker tag go-webapp:v1.0 ${{ secrets.DOCKER_USERNAME }}/go-webapp:${{ github.run_id }}
+          
+        # push the docker image
+        - name: Push Docker image
+          run: docker push ${{ secrets.DOCKER_USERNAME }}/go-webapp:${{ github.sha }}
+  
+  update-helm-chart:
+    
+    # defined the runner for the job
+    runs-on: ubuntu-latest
+
+    # need build job to complete before this job starts
+    needs: docker
+
+    # steps
+    steps:
+
+      # checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.G0_WEBAPP_TOKEN }}
+
+      # update the helm chart
+      - name: Update Helm chart
+        # sed [OPTIONS] 'SCRIPT' [INPUTFILE...]
+        # -i: edit files in place
+        #replace the tag in the values.yaml file
+        run: |
+          sed -i 's/tag: .*/tag: "${{ github.run_id }}"/' helm/go-webapp-helm/values.yaml
+
+      # push the changes to the repository
+      - name: Push changes
+        run: |
+          git config --global user.email ${{ secrets.EMAIL }}
+          git config --global user.name "${{ secrets.NAME }}"
+          git add helm/go-webapp-helm/values.yaml
+          git commit -m "Update helm chart"
+          git push
