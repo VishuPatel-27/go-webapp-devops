@@ -89,7 +89,7 @@ jobs:
           with:
             # docker hub username and password
             username: ${{ secrets.DOCKER_USERNAME }}
-            password: ${{ secrets.DOCKER_PASSWORD }}
+            password: ${{ secrets.DOCKERHUB_TOKEN }}
 
         # we are using public docker registry
         # that is why we don't need to login to the docker registry
