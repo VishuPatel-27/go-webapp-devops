@@ -12,6 +12,7 @@ on:
     # paths to ignore
     paths-ignore:
       - README.md
+      - helm/**
 
 # jobs that will be executed
 
