@@ -65,8 +65,7 @@ jobs:
       - name: static code analysis
         uses: golangci/golangci-lint-action@v6
         with:
-          version: latest
-          args: run --enable-all
+          version: v1.56.2
   
   # build and push the docker image
   docker:
