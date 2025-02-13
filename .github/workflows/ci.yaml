@@ -123,7 +123,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.G0_WEBAPP_TOKEN }}
+          token: ${{ secrets.TOKEN }}
 
       # update the helm chart
       - name: Update Helm chart
