@@ -98,7 +98,7 @@ jobs:
           
         # push the docker image
         - name: Push Docker image
-          run: docker push ${{ secrets.DOCKER_USERNAME }}/go-webapp:${{ github.sha }}
+          run: docker push ${{ secrets.DOCKER_USERNAME }}/go-webapp:${{ github.run_id }}
   
   update-helm-chart:
     
