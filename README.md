@@ -81,7 +81,7 @@ go build -o go-webapp .
 ./go-webapp
 ```
 
-The application will be available at `http://localhost:8080`.
+The application will be available at `http://localhost:8080/courses`.
 
 ## CI/CD Pipeline
 
