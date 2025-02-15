@@ -109,9 +109,9 @@ The CI/CD pipeline is defined using GitHub Actions in `.github/workflows/ci.yaml
     kubectl apply -f k8s/manifests/
     ```
 
-### changes deployed using ArgoCD
+## ArgoCD
 
-1. Changes in values.yaml file detected by argoCD.
+Changes in values.yaml file detected by argoCD.
 
 ## License
 
